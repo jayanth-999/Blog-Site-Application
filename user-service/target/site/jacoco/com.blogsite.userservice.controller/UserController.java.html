@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">User Service</a> &gt; <a href="index.source.html" class="el_package">com.blogsite.userservice.controller</a> &gt; <span class="el_source">UserController.java</span></div><h1>UserController.java</h1><pre class="source lang-java linenums">package com.blogsite.userservice.controller;
+
+import com.blogsite.userservice.dto.UserRegistrationRequest;
+import com.blogsite.userservice.dto.UserResponse;
+import com.blogsite.userservice.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+/**
+ * ========================================
+ * USER CONTROLLER - REST API LAYER
+ * ========================================
+ * 
+ * WHAT IS A CONTROLLER?
+ * - Handles HTTP requests and responses
+ * - Maps URLs to Java methods
+ * - First entry point when a client calls your API
+ * - Delegates business logic to Service layer
+ * 
+ * FLOW OF A REQUEST:
+ * 1. Client sends HTTP POST to /api/v1.0/blogsite/user/register
+ * 2. Spring routes it to registerUser() method
+ * 3. Spring validates the request body (@Valid)
+ * 4. Method calls UserService to process registration
+ * 5. Method wraps response in ResponseEntity
+ * 6. Spring converts ResponseEntity to JSON
+ * 7. Spring sends HTTP response to client
+ * 
+ * ANNOTATIONS EXPLAINED:
+ * 
+ * @RestController
+ * - Combination of @Controller and @ResponseBody
+ * - Tells Spring this handles REST API requests
+ * - Automatically converts return values to JSON
+ * 
+ * @RequestMapping(&quot;/api/v1.0/blogsite/user&quot;)
+ * - Base path for all endpoints in this controller
+ * - All methods in this class will start with this path
+ * 
+ * @RequiredArgsConstructor (Lombok)
+ * - Creates constructor for dependency injection
+ * - UserService is injected automatically by Spring
+ * 
+ * @Slf4j (Lombok)
+ * - Provides logging capability
+ * - Use log.info(), log.error(), etc.
+ * 
+ * @Tag (OpenAPI/Swagger)
+ * - Groups related endpoints in API documentation
+ * - Makes Swagger UI organized and readable
+ */
+@RestController
+@RequestMapping(&quot;/api/v1.0/blogsite/user&quot;)
+<span class="fc" id="L64">@RequiredArgsConstructor</span>
+<span class="fc" id="L65">@Slf4j</span>
+@Tag(name = &quot;User Management&quot;, description = &quot;APIs for user registration and management&quot;)
+public class UserController {
+
+    /**
+     * DEPENDENCY INJECTION
+     * 
+     * UserService is injected by Spring.
+     * We don't create it with 'new' - Spring manages it!
+     */
+    private final UserService userService;
+
+    /**
+     * ========================================
+     * USER REGISTRATION ENDPOINT
+     * ========================================
+     * 
+     * ENDPOINT: POST /api/v1.0/blogsite/user/register
+     * 
+     * PURPOSE:
+     * Register a new user in the system.
+     * 
+     * REQUEST BODY (JSON):
+     * {
+     *   &quot;userName&quot;: &quot;johndoe&quot;,
+     *   &quot;userEmail&quot;: &quot;john@example.com&quot;,
+     *   &quot;password&quot;: &quot;password123&quot;
+     * }
+     * 
+     * SUCCESSFUL RESPONSE (201 CREATED):
+     * {
+     *   &quot;id&quot;: 1,
+     *   &quot;userName&quot;: &quot;johndoe&quot;,
+     *   &quot;userEmail&quot;: &quot;john@example.com&quot;,
+     *   &quot;createdAt&quot;: &quot;2024-01-24T10:30:00&quot;,
+     *   &quot;message&quot;: &quot;User registered successfully!&quot;
+     * }
+     * 
+     * ERROR RESPONSES:
+     * 400 BAD REQUEST - Validation failed (missing fields, invalid email, etc.)
+     * 409 CONFLICT - User already exists with that email/username
+     * 500 INTERNAL SERVER ERROR - Unexpected error
+     * 
+     * ANNOTATIONS EXPLAINED:
+     * 
+     * @PostMapping(&quot;/register&quot;)
+     * - Handles HTTP POST requests
+     * - Full path: /api/v1.0/blogsite/user/register
+     * - POST is used for creating new resources
+     * 
+     * @RequestBody
+     * - Maps JSON from request body to Java object
+     * - Spring automatically deserializes JSON to UserRegistrationRequest
+     * 
+     * @Valid
+     * - Triggers validation annotations in UserRegistrationRequest
+     * - Checks @NotBlank, @Email, @Size, @Pattern
+     * - If validation fails, Spring returns 400 Bad Request automatically
+     * 
+     * @Operation (OpenAPI/Swagger)
+     * - Describes what this endpoint does
+     * - Shows up in Swagger UI
+     * 
+     * @ApiResponses (OpenAPI/Swagger)
+     * - Documents possible responses
+     * - Helps API consumers understand what to expect
+     * 
+     * ResponseEntity&lt;UserResponse&gt;
+     * - Wraps the response
+     * - Allows you to set HTTP status code
+     * - Returns body + status code + headers
+     * 
+     * @param request The registration data from client
+     * @return ResponseEntity with user details and 201 status
+     */
+    @PostMapping(&quot;/register&quot;)
+    @Operation(
+        summary = &quot;Register a new user&quot;,
+        description = &quot;Creates a new user account with username, email, and password. &quot; +
+                      &quot;Email must contain @ and end with .com. &quot; +
+                      &quot;Password must be alphanumeric and at least 8 characters.&quot;
+    )
+    @ApiResponses(value = {
+        @ApiResponse(
+            responseCode = &quot;201&quot;,
+            description = &quot;User registered successfully&quot;,
+            content = @Content(schema = @Schema(implementation = UserResponse.class))
+        ),
+        @ApiResponse(
+            responseCode = &quot;400&quot;,
+            description = &quot;Invalid input data (validation failed)&quot;
+        ),
+        @ApiResponse(
+            responseCode = &quot;409&quot;,
+            description = &quot;User already exists with this email or username&quot;
+        ),
+        @ApiResponse(
+            responseCode = &quot;500&quot;,
+            description = &quot;Internal server error&quot;
+        )
+    })
+    public ResponseEntity&lt;UserResponse&gt; registerUser(
+            @Valid @RequestBody UserRegistrationRequest request) {
+        
+        // Log the incoming request
+<span class="fc" id="L170">        log.info(&quot;Received registration request for email: {}&quot;, request.getUserEmail());</span>
+
+        // Call service layer to handle business logic
+        // Service will:
+        // 1. Check if user already exists
+        // 2. Create and save user
+        // 3. Return response DTO
+<span class="fc" id="L177">        UserResponse response = userService.registerUser(request);</span>
+
+        // Return response with 201 CREATED status
+        // 201 = Successfully created a new resource
+        // The response body contains the created user details
+<span class="fc" id="L182">        return new ResponseEntity&lt;&gt;(response, HttpStatus.CREATED);</span>
+    }
+
+    /**
+     * ========================================
+     * GET USER BY EMAIL (EXAMPLE ENDPOINT)
+     * ========================================
+     * 
+     * ENDPOINT: GET /api/v1.0/blogsite/user/{email}
+     * 
+     * This is an example of a GET endpoint with path variable.
+     * 
+     * EXAMPLE:
+     * GET /api/v1.0/blogsite/user/john@example.com
+     * 
+     * @PathVariable
+     * - Extracts value from URL path
+     * - {email} in URL becomes 'email' parameter
+     * 
+     * @param email Email address from URL
+     * @return User details
+     */
+    @GetMapping(&quot;/{email}&quot;)
+    @Operation(summary = &quot;Get user by email&quot;, description = &quot;Retrieves user information by email address&quot;)
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = &quot;200&quot;, description = &quot;User found&quot;),
+        @ApiResponse(responseCode = &quot;404&quot;, description = &quot;User not found&quot;)
+    })
+    public ResponseEntity&lt;UserResponse&gt; getUserByEmail(@PathVariable String email) {
+<span class="fc" id="L211">        log.info(&quot;Fetching user details for email: {}&quot;, email);</span>
+<span class="fc" id="L212">        UserResponse response = userService.getUserByEmail(email);</span>
+<span class="fc" id="L213">        return ResponseEntity.ok(response);  // 200 OK</span>
+    }
+
+    /**
+     * ========================================
+     * HEALTH CHECK ENDPOINT
+     * ========================================
+     * 
+     * ENDPOINT: GET /api/v1.0/blogsite/user/health
+     * 
+     * Simple endpoint to check if the service is running.
+     * Useful for monitoring and load balancers.
+     * 
+     * RESPONSE: &quot;User Service is running!&quot;
+     */
+    @GetMapping(&quot;/health&quot;)
+    @Operation(summary = &quot;Health check&quot;, description = &quot;Check if User Service is running&quot;)
+    public ResponseEntity&lt;String&gt; healthCheck() {
+<span class="fc" id="L231">        return ResponseEntity.ok(&quot;User Service is running!&quot;);</span>
+    }
+}
+
+/*
+ * ========================================
+ * REST API BEST PRACTICES DEMONSTRATED
+ * ========================================
+ * 
+ * 1. PROPER HTTP METHODS
+ *    - POST for creating resources
+ *    - GET for retrieving resources
+ *    - PUT/PATCH for updating (not shown here)
+ *    - DELETE for removing (not shown here)
+ * 
+ * 2. PROPER HTTP STATUS CODES
+ *    - 200 OK - Successful GET
+ *    - 201 CREATED - Successfully created resource
+ *    - 400 BAD REQUEST - Validation failed
+ *    - 404 NOT FOUND - Resource doesn't exist
+ *    - 409 CONFLICT - Resource already exists
+ *    - 500 INTERNAL SERVER ERROR - Server error
+ * 
+ * 3. VALIDATION
+ *    - Use @Valid to trigger validation
+ *    - Validation rules in DTO classes
+ *    - Clear error messages
+ * 
+ * 4. DOCUMENTATION
+ *    - OpenAPI/Swagger annotations
+ *    - Automatic interactive documentation
+ *    - Easy for frontend developers to understand
+ * 
+ * 5. SEPARATION OF CONCERNS
+ *    - Controller handles HTTP
+ *    - Service handles business logic
+ *    - Repository handles database
+ *    - Each layer has one responsibility
+ * 
+ * 6. LOGGING
+ *    - Log important events
+ *    - Helps with debugging
+ *    - Track API usage
+ */
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

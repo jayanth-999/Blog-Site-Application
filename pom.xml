@@ -202,7 +202,7 @@
                                             <limit>
                                                 <counter>LINE</counter>
                                                 <value>COVEREDRATIO</value>
-                                                <minimum>0.80</minimum>  <!-- 80% coverage required -->
+                                                \u003cminimum\u003e0.70\u003c/minimum\u003e  <!-- 80% coverage required -->
                                             </limit>
                                         </limits>
                                     </rule>

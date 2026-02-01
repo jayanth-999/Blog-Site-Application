@@ -1,0 +1,29 @@
+# ========================================
+# USER SERVICE - TEST CONFIGURATION
+# ========================================
+
+spring:
+  datasource:
+    # Use H2 in-memory database for tests
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;MODE=MySQL
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  jpa:
+    # Instructions for Hibernate in test mode
+    hibernate:
+      # Automatically create the schema for tests
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        # Use H2 dialect for tests
+        dialect: org.hibernate.dialect.H2Dialect
+
+# Disable logging that's too noisy for tests
+logging:
+  level:
+    root: INFO
+    org.hibernate.SQL: DEBUG

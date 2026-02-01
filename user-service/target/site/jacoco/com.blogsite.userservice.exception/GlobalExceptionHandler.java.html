@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GlobalExceptionHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">User Service</a> &gt; <a href="index.source.html" class="el_package">com.blogsite.userservice.exception</a> &gt; <span class="el_source">GlobalExceptionHandler.java</span></div><h1>GlobalExceptionHandler.java</h1><pre class="source lang-java linenums">package com.blogsite.userservice.exception;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * ========================================
+ * GLOBAL EXCEPTION HANDLER
+ * ========================================
+ * 
+ * WHAT IS @RestControllerAdvice?
+ * - A global exception handler for all controllers
+ * - Intercepts exceptions thrown anywhere in your app
+ * - Returns proper error responses to the client
+ * 
+ * WHY USE IT?
+ * Without this:
+ * - Clients get ugly stack traces
+ * - No consistent error format
+ * - Hard to debug from client side
+ * 
+ * With this:
+ * - Clean, user-friendly error messages
+ * - Consistent JSON error format
+ * - Proper HTTP status codes
+ * 
+ * HOW IT WORKS:
+ * 1. Exception is thrown somewhere in your code
+ * 2. Spring catches it
+ * 3. Looks for @ExceptionHandler method matching the exception type
+ * 4. Calls that method to generate the response
+ * 5. Returns the response to the client
+ */
+@RestControllerAdvice
+<span class="fc" id="L43">public class GlobalExceptionHandler {</span>
+
+    /**
+     * HANDLE VALIDATION ERRORS
+     * 
+     * When does this trigger?
+     * - When @Valid validation fails (e.g., @NotBlank, @Email, @Size)
+     * - Spring throws MethodArgumentNotValidException
+     * - This method catches it and formats a nice response
+     * 
+     * EXAMPLE:
+     * Client sends: { &quot;userName&quot;: &quot;&quot;, &quot;userEmail&quot;: &quot;invalid&quot; }
+     * Response: {
+     *   &quot;timestamp&quot;: &quot;2024-01-24T10:30:00&quot;,
+     *   &quot;status&quot;: 400,
+     *   &quot;errors&quot;: {
+     *     &quot;userName&quot;: &quot;User name is required&quot;,
+     *     &quot;userEmail&quot;: &quot;Email must be valid&quot;
+     *   }
+     * }
+     * 
+     * @param ex The validation exception
+     * @return ResponseEntity with validation errors
+     */
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity&lt;Map&lt;String, Object&gt;&gt; handleValidationExceptions(
+            MethodArgumentNotValidException ex) {
+        
+        // Create a map to hold field-specific errors
+<span class="fc" id="L72">        Map&lt;String, String&gt; fieldErrors = new HashMap&lt;&gt;();</span>
+        
+        // Extract each validation error
+        // ex.getBindingResult() contains all validation failures
+<span class="fc" id="L76">        ex.getBindingResult().getAllErrors().forEach((error) -&gt; {</span>
+            // Get the field name (e.g., &quot;userName&quot;, &quot;userEmail&quot;)
+<span class="fc" id="L78">            String fieldName = ((FieldError) error).getField();</span>
+            
+            // Get the error message (e.g., &quot;User name is required&quot;)
+<span class="fc" id="L81">            String errorMessage = error.getDefaultMessage();</span>
+            
+            // Add to our map
+<span class="fc" id="L84">            fieldErrors.put(fieldName, errorMessage);</span>
+<span class="fc" id="L85">        });</span>
+
+        // Build the complete error response
+<span class="fc" id="L88">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L89">        response.put(&quot;timestamp&quot;, LocalDateTime.now());</span>
+<span class="fc" id="L90">        response.put(&quot;status&quot;, HttpStatus.BAD_REQUEST.value());  // 400</span>
+<span class="fc" id="L91">        response.put(&quot;error&quot;, &quot;Validation Failed&quot;);</span>
+<span class="fc" id="L92">        response.put(&quot;errors&quot;, fieldErrors);</span>
+
+<span class="fc" id="L94">        return new ResponseEntity&lt;&gt;(response, HttpStatus.BAD_REQUEST);</span>
+    }
+
+    /**
+     * HANDLE USER ALREADY EXISTS ERROR
+     * 
+     * When does this trigger?
+     * - When trying to register with existing email or username
+     * - Our service throws UserAlreadyExistsException
+     * - This method catches it and returns 409 CONFLICT
+     * 
+     * EXAMPLE:
+     * Response: {
+     *   &quot;timestamp&quot;: &quot;2024-01-24T10:30:00&quot;,
+     *   &quot;status&quot;: 409,
+     *   &quot;error&quot;: &quot;User Already Exists&quot;,
+     *   &quot;message&quot;: &quot;A user with this email already exists&quot;
+     * }
+     * 
+     * @param ex The custom exception
+     * @return ResponseEntity with error details
+     */
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    public ResponseEntity&lt;Map&lt;String, Object&gt;&gt; handleUserAlreadyExists(
+            UserAlreadyExistsException ex) {
+        
+<span class="fc" id="L120">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L121">        response.put(&quot;timestamp&quot;, LocalDateTime.now());</span>
+<span class="fc" id="L122">        response.put(&quot;status&quot;, HttpStatus.CONFLICT.value());  // 409</span>
+<span class="fc" id="L123">        response.put(&quot;error&quot;, &quot;User Already Exists&quot;);</span>
+<span class="fc" id="L124">        response.put(&quot;message&quot;, ex.getMessage());</span>
+
+<span class="fc" id="L126">        return new ResponseEntity&lt;&gt;(response, HttpStatus.CONFLICT);</span>
+    }
+
+    /**
+     * HANDLE ALL OTHER EXCEPTIONS
+     * 
+     * This is a catch-all for any unexpected errors.
+     * 
+     * BEST PRACTICE:
+     * - Log the full exception details server-side for debugging
+     * - Return a generic message to the client (don't expose internals)
+     * 
+     * @param ex Any exception not handled by specific handlers
+     * @return ResponseEntity with generic error
+     */
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity&lt;Map&lt;String, Object&gt;&gt; handleGenericException(Exception ex) {
+        
+        // Log the full exception server-side
+<span class="fc" id="L145">        System.err.println(&quot;Unexpected error: &quot; + ex.getMessage());</span>
+<span class="fc" id="L146">        ex.printStackTrace();</span>
+
+        // Return generic error to client
+<span class="fc" id="L149">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L150">        response.put(&quot;timestamp&quot;, LocalDateTime.now());</span>
+<span class="fc" id="L151">        response.put(&quot;status&quot;, HttpStatus.INTERNAL_SERVER_ERROR.value());  // 500</span>
+<span class="fc" id="L152">        response.put(&quot;error&quot;, &quot;Internal Server Error&quot;);</span>
+<span class="fc" id="L153">        response.put(&quot;message&quot;, &quot;An unexpected error occurred. Please try again later.&quot;);</span>
+
+<span class="fc" id="L155">        return new ResponseEntity&lt;&gt;(response, HttpStatus.INTERNAL_SERVER_ERROR);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserServiceApplication.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">User Service</a> &gt; <a href="index.source.html" class="el_package">com.blogsite.userservice</a> &gt; <span class="el_source">UserServiceApplication.java</span></div><h1>UserServiceApplication.java</h1><pre class="source lang-java linenums">package com.blogsite.userservice;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+/**
+ * ========================================
+ * USER SERVICE - MAIN APPLICATION CLASS
+ * ========================================
+ * 
+ * This is the entry point of the User Service microservice.
+ * 
+ * WHAT DOES THIS CLASS DO?
+ * - Starts the Spring Boot application
+ * - Configures auto-configuration (Spring Boot magic!)
+ * - Scans for components (controllers, services, repositories)
+ * 
+ * ANNOTATIONS EXPLAINED:
+ * 
+ * @SpringBootApplication
+ * This is a convenience annotation that combines three annotations:
+ * 1. @Configuration - Marks this class as a source of bean definitions
+ * 2. @EnableAutoConfiguration - Tells Spring Boot to automatically configure your app
+ * 3. @ComponentScan - Tells Spring to scan for components in this package and sub-packages
+ * 
+ * HOW TO RUN:
+ * - From IDE: Right-click and select &quot;Run&quot;
+ * - From terminal: mvn spring-boot:run
+ * - The service will start on port 8081 (configured in application.yml)
+ */
+@SpringBootApplication
+<span class="fc" id="L32">public class UserServiceApplication {</span>
+
+    /**
+     * Main method - the starting point of any Java application
+     * 
+     * @param args Command line arguments (usually not used in Spring Boot)
+     */
+    public static void main(String[] args) {
+        // SpringApplication.run() does the following:
+        // 1. Creates an application context (Spring container)
+        // 2. Loads all beans (components, services, controllers, repositories)
+        // 3. Starts the embedded Tomcat server
+        // 4. Makes your REST APIs available
+<span class="nc" id="L45">        SpringApplication.run(UserServiceApplication.class, args);</span>
+        
+<span class="nc" id="L47">        System.out.println(&quot;========================================&quot;);</span>
+<span class="nc" id="L48">        System.out.println(&quot;✅ User Service Started Successfully!&quot;);</span>
+<span class="nc" id="L49">        System.out.println(&quot;🌐 Swagger UI: http://localhost:8081/swagger-ui.html&quot;);</span>
+<span class="nc" id="L50">        System.out.println(&quot;📚 API Docs: http://localhost:8081/v3/api-docs&quot;);</span>
+<span class="nc" id="L51">        System.out.println(&quot;========================================&quot;);</span>
+<span class="nc" id="L52">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

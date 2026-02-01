@@ -1,0 +1,12 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+User Service,com.blogsite.userservice.service,UserService,22,79,0,4,4,20,2,5,2,3
+User Service,com.blogsite.userservice,UserServiceApplication,20,3,0,0,7,1,1,1,1,1
+User Service,com.blogsite.userservice.model,User.UserBuilder,26,39,0,0,0,1,3,6,3,6
+User Service,com.blogsite.userservice.model,User,96,217,33,21,2,13,35,13,8,13
+User Service,com.blogsite.userservice.exception,GlobalExceptionHandler,0,130,0,0,0,27,0,5,0,5
+User Service,com.blogsite.userservice.exception,UserAlreadyExistsException,3,7,0,0,0,3,1,1,1,1
+User Service,com.blogsite.userservice.controller,UserController,0,41,0,0,0,9,0,5,0,5
+User Service,com.blogsite.userservice.dto,UserRegistrationRequest,131,40,30,0,0,7,19,9,4,9
+User Service,com.blogsite.userservice.dto,UserResponse,221,54,46,0,2,14,33,8,10,8
+User Service,com.blogsite.userservice.dto,UserRegistrationRequest.UserRegistrationRequestBuilder,8,28,0,0,0,1,1,5,1,5
+User Service,com.blogsite.userservice.dto,UserResponse.UserResponseBuilder,13,42,0,0,0,1,1,7,1,7

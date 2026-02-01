@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.blogsite.userservice.repository.UserRepositoryTest
+-------------------------------------------------------------------------------
+Tests run: 13, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 7.962 s -- in com.blogsite.userservice.repository.UserRepositoryTest
