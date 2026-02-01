@@ -35,7 +35,7 @@ import java.time.LocalDateTime;
  */
 @Entity
 @Table(name = &quot;users&quot;)  // Table name in database
-<span class="pc bpc" id="L38" title="33 of 54 branches missed.">@Data                   // Lombok: generates getters/setters/toString/equals/hashCode</span>
+<span class="pc bpc" id="L38" title="27 of 54 branches missed.">@Data                   // Lombok: generates getters/setters/toString/equals/hashCode</span>
 <span class="pc" id="L39">@Builder                // Lombok: implements Builder pattern</span>
 <span class="fc" id="L40">@NoArgsConstructor      // Lombok: creates User() constructor</span>
 <span class="fc" id="L41">@AllArgsConstructor     // Lombok: creates User(id, userName, ...) constructor</span>
@@ -148,7 +148,7 @@ public class User {
 
     @PreUpdate
     protected void onUpdate() {
-<span class="nc" id="L151">        updatedAt = LocalDateTime.now();</span>
-<span class="nc" id="L152">    }</span>
+<span class="fc" id="L151">        updatedAt = LocalDateTime.now();</span>
+<span class="fc" id="L152">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

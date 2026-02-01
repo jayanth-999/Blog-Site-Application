@@ -1,6 +1,9 @@
+com\blogsite\userservice\dto\UserResponseTest.class
 com\blogsite\userservice\exception\GlobalExceptionHandlerTest.class
+com\blogsite\userservice\model\UserAdditionalTest.class
 com\blogsite\userservice\service\UserServiceTest.class
 com\blogsite\userservice\controller\UserControllerTest.class
 com\blogsite\userservice\UserServiceApplicationTest.class
 com\blogsite\userservice\repository\UserRepositoryTest.class
 com\blogsite\userservice\model\UserTest.class
+com\blogsite\userservice\dto\UserRegistrationRequestTest.class
