@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+         http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!--
+    API GATEWAY MODULE
+    
+    This is the entry point for all client requests.
+    It routes requests to the appropriate microservice.
+    
+    WHY API GATEWAY?
+    - Single entry point for clients
+    - Hide internal microservice structure
+    - Central place for cross-cutting concerns:
+      * Authentication
+      * Rate limiting
+      * Logging
+      * CORS
+    -->
+
+    <parent>
+        <groupId>com.blogsite</groupId>
+        <artifactId>blog-site-parent</artifactId>
+        <version>1.0.0</version>
+    </parent>
+
+    <artifactId>api-gateway</artifactId>
+    <name>API Gateway</name>
+    <description>API Gateway for routing requests to microservices</description>
+
+    <dependencies>
+        <!-- 
+        Spring Cloud Gateway
+        Modern, reactive gateway (replacement for deprecated Zuul)
+        -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-gateway</artifactId>
+        </dependency>
+
+        <!-- 
+        Spring Boot Actuator
+        Provides health checks and monitoring endpoints
+        -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

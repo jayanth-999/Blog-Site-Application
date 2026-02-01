@@ -1,0 +1,41 @@
+# ========================================
+# BLOG SERVICE CONFIGURATION
+# ========================================
+
+server:
+  port: 8082  # Blog Service runs on port 8082
+
+spring:
+  application:
+    name: blog-service
+
+  # Database configuration
+  datasource:
+    url: jdbc:mysql://localhost:3306/blogsite_db?createDatabaseIfNotExist=true
+    username: root
+    password: admin@123
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  # JPA configuration
+  jpa:
+    hibernate:
+      ddl-auto: update  # Create/update tables automatically
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQLDialect
+
+# Logging
+logging:
+  level:
+    root: INFO
+    com.blogsite.blogservice: DEBUG
+    org.hibernate.SQL: DEBUG
+
+# OpenAPI/Swagger configuration
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html

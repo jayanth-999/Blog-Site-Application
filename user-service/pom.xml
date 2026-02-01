@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+         http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!--
+    USER SERVICE MODULE
+    This microservice handles user registration and authentication
+    -->
+
+    <!-- Reference to parent POM -->
+    <parent>
+        <groupId>com.blogsite</groupId>
+        <artifactId>blog-site-parent</artifactId>
+        <version>1.0.0</version>
+    </parent>
+
+    <artifactId>user-service</artifactId>
+    <name>User Service</name>
+    <description>User registration and management microservice</description>
+
+    <dependencies>
+        <!-- 
+        Spring Boot Web Starter
+        Provides everything needed to build REST APIs:
+        - Spring MVC (for handling HTTP requests)
+        - Embedded Tomcat server
+        - JSON serialization/deserialization
+        -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <!-- 
+        Spring Data JPA
+        Simplifies database operations:
+        - JPA (Java Persistence API) for object-relational mapping
+        - Hibernate as the JPA implementation
+        - Automatic CRUD operations
+        -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+
+        <!-- 
+        MySQL Driver
+        Enables connection to MySQL database
+        -->
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+        </dependency>
+
+        <!-- 
+        Validation Starter
+        Provides annotations for input validation:
+        @NotNull, @NotBlank, @Email, @Size, @Pattern, etc.
+        -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+
+        <!-- 
+        Lombok
+        Reduces boilerplate code with annotations:
+        @Data - generates getters, setters, toString, equals, hashCode
+        @NoArgsConstructor - generates no-argument constructor
+        @AllArgsConstructor - generates constructor with all fields
+        @Builder - implements Builder pattern for object creation
+        -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- 
+        SpringDoc OpenAPI
+        Automatically generates API documentation
+        Access at: http://localhost:8081/swagger-ui.html
+        -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+        </dependency>
+
+        <!-- 
+        Spring Boot Test Starter
+        Includes testing libraries:
+        - JUnit 5
+        - Mockito (for mocking)
+        - AssertJ (for assertions)
+        - Spring Test
+        -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- 
+        H2 Database (for testing)
+        In-memory database for unit tests
+        Your tests won't affect the real MySQL database
+        -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
